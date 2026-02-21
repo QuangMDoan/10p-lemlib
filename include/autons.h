@@ -6,12 +6,11 @@
 // Autonomous routine declarations
 void sawp();
 void four_hook();
-void six_plus_three_mid();
-void six_plus_three_low();
+void four_plus_three_mid();
+void four_plus_three_low();
 void drive_off();
 void skills();
 void simple_skills();
-void sawp_left();
 
 // Auton selection arrays
 extern const std::string auton_names[];

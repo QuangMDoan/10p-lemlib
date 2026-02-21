@@ -11,23 +11,31 @@ namespace AutonUtils {
 
 	enum class DistanceComparison {
 		LESS_THAN,
-		GREATER_THAN,
 		LESS_EQUAL,
+		GREATER_THAN,
 		GREATER_EQUAL
 	};
 
+	/* ================= DRIVE STATE (ASYNC DISTANCE WAITS) ================= */
+
+	static lemlib::Pose driveStartPose{0, 0, 0}; // FIX: explicit init
+	static float driveTargetDistance = 0.0f;
+	static bool driveActive = false;
+
 	/* ================= BASIC LEMLIB DRIVING ================= */
 
-	inline void driveDistance(float distance_inches, bool forwards = true,
-	                          float maxSpeed = 127, int timeout_ms = 5000) {
+	inline void driveDistance(float distance_inches,
+	                          bool forwards = true,
+	                          float maxSpeed = 127,
+	                          int timeout_ms = 5000) {
 
 		lemlib::Pose pose = chassis.getPose();
 
 		float dist = forwards ? std::abs(distance_inches) : -std::abs(distance_inches);
 
 		float heading_rad = pose.theta * M_PI / 180.0f;
-        float target_x = pose.x + dist * std::sin(heading_rad);
-        float target_y = pose.y + dist * std::cos(heading_rad);
+		float target_x = pose.x + dist * std::sin(heading_rad);
+		float target_y = pose.y + dist * std::cos(heading_rad);
 
 		chassis.moveToPoint(
 			target_x,
@@ -35,7 +43,7 @@ namespace AutonUtils {
 			timeout_ms,
 			{ .forwards = forwards, .maxSpeed = maxSpeed }
 		);
-        chassis.waitUntilDone();
+		chassis.waitUntilDone();
 	}
 
 	inline void driveForwardDistance(float distance_inches,
@@ -50,10 +58,61 @@ namespace AutonUtils {
 		driveDistance(distance_inches, false, maxSpeed, timeout_ms);
 	}
 
+	/* ================= ASYNC DRIVE + DISTANCE WAITS ================= */
+
+	inline void startDriveDistance(float distance_inches,
+	                               bool forwards = true,
+	                               float maxSpeed = 127,
+	                               int timeout_ms = 5000) {
+
+		driveStartPose = chassis.getPose();
+		driveTargetDistance = std::abs(distance_inches);
+		driveActive = true;
+
+		float dist = forwards ? driveTargetDistance : -driveTargetDistance;
+
+		float heading_rad = driveStartPose.theta * M_PI / 180.0f;
+		float target_x = driveStartPose.x + dist * std::sin(heading_rad);
+		float target_y = driveStartPose.y + dist * std::cos(heading_rad);
+
+		chassis.moveToPoint(
+			target_x,
+			target_y,
+			timeout_ms,
+			{ .forwards = forwards, .maxSpeed = maxSpeed }
+		);
+	}
+
+	inline float getDriveDistanceTraveled() {
+		if (!driveActive) return 0.0f;
+
+		lemlib::Pose curr = chassis.getPose();
+		float dx = curr.x - driveStartPose.x;
+		float dy = curr.y - driveStartPose.y;
+		return std::sqrt(dx * dx + dy * dy);
+	}
+
+	inline bool waitUntilDistanceTraveled(float inches,
+	                                      int timeout_ms = 2000) {
+		unsigned long start = pros::millis();
+
+		while (pros::millis() - start < (unsigned long)timeout_ms) {
+			if (getDriveDistanceTraveled() >= inches) {
+				return true;
+			}
+			pros::delay(5);
+		}
+		return false;
+	}
+
+	inline void waitUntilDriveDone() {
+		chassis.waitUntilDone();
+		driveActive = false;
+	}
+
 	/* ================= SENSOR-BASED DRIVING ================= */
 
 	inline float smoothDistanceInches(pros::Distance& sensor) {
-		// 5-sample moving average to kill jitter
 		const int SAMPLES = 3;
 		float sum = 0;
 		int valid = 0;
@@ -83,10 +142,7 @@ namespace AutonUtils {
 		maxSpeed = std::clamp(maxSpeed, 0, 127);
 		minSpeed = std::clamp(minSpeed, 0, maxSpeed);
 
-		// BIG decel buffer – tune 8–12 inches depending on robot
 		const float DECEL_BUFFER = 6.0f;
-
-		// Predictive stopping based on speed (inches)
 		const float STOP_OFFSET = (maxSpeed / 127.0f) * 4.0f;
 
 		unsigned long start = pros::millis();
