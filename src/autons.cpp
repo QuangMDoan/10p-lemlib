@@ -13,11 +13,11 @@ void sawp() {
     matchload_bar.set_value(true);
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.waitUntilDone();
-    AutonUtils::driveDistance(17, true, 60, 700);
+    AutonUtils::driveDistance(17.7, true, 60, 700);
     chassis.arcade(50, 0);
     pros::delay(400);
     chassis.arcade(0, 0);
-    AutonUtils::startDriveDistance(30, false, 127, 1000);
+    AutonUtils::startDriveDistance(33, false, 127, 1000);
     AutonUtils::waitUntilDistanceTraveled(24);
     intake_manager.set_state(IntakeState::SCORE_HIGH);
     AutonUtils::waitUntilDriveDone();
@@ -48,8 +48,8 @@ void sawp() {
     intake_manager.set_state(IntakeState::SCORE_MID);
     chassis.turnToHeading(145, 500);
     chassis.waitUntilDone();
-    intake_manager.set_state(IntakeState::INTAKE);
-    AutonUtils::driveDistance(49.5, true, 127, 1250);
+    intake_manager.set_state(IntakeState::IDLE);
+    AutonUtils::driveDistance(50, true, 127, 1250);
     chassis.turnToHeading(90, 750);
     chassis.waitUntilDone();
     AutonUtils::startDriveDistance(20, false, 127, 1000);
