@@ -11,7 +11,8 @@ enum class IntakeState {
 	INTAKE,
 	SCORE_MID_SKILLS,
 	SCORE_LOW_SKILLS,
-	UNJAM
+	UNJAM,
+	SCORE_MID_FAST
 };
 
 class IntakeManager {
@@ -65,7 +66,7 @@ public:
 				stopper.set_value(in_cooldown ? false : true);
 				intake.move(127);
 				middle_roller.move(127);
-				top_roller.move(-40);
+				top_roller.move(-67);
 				break;
 
 			case IntakeState::SCORE_HIGH:
@@ -81,15 +82,15 @@ public:
 				stopper.set_value(true);
 				intake.move(127);
 				middle_roller.move(127);
-				top_roller.move(30);
+				top_roller.move(33);
 				break;
 
 			case IntakeState::SCORE_MID_SKILLS:
 				// intake and middle roller run forward, top roller runs reversed
 				stopper.set_value(in_cooldown ? false : true);
 				intake.move(127);
-				middle_roller.move(35);
-				top_roller.move(-20);
+				middle_roller.move(40);
+				top_roller.move(-25);
 				break;
 
 			case IntakeState::SCORE_LOW_SKILLS:
@@ -104,6 +105,13 @@ public:
 				intake.move(-127);
 				middle_roller.move(-127);
 				break;	
+			
+			case IntakeState::SCORE_MID_FAST:
+				stopper.set_value(in_cooldown ? false : true);
+				intake.move(127);
+				middle_roller.move(127);
+				top_roller.move(-127);
+				break;
 		}
 	}
 };
