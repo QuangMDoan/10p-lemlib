@@ -1,17 +1,76 @@
-# Compiled Object files
+########################################
+# PROS Build Artifacts (CRITICAL)
+########################################
+
+# Compiled output
+/build/
+/bin/
+/out/
+/firmware/
+
+# Object files
 *.o
 *.obj
-
-# Executables
-*.bin
 *.elf
+*.bin
+*.hex
+*.a
+*.d
 
-# PROS
-bin/
+# Map files
+*.map
+
+########################################
+# PROS System Files
+########################################
+
+# Temporary PROS files
+.pros/
+*.bak
+*.tmp
+
+########################################
+# VS Code / Editor
+########################################
+
 .vscode/
-.cache/
-compile_commands.json
-temp.log
-temp.errors
-*.ini
-.d/
+*.code-workspace
+
+########################################
+# macOS
+########################################
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+########################################
+# Windows
+########################################
+
+Thumbs.db
+Desktop.ini
+
+########################################
+# Logs
+########################################
+
+*.log
+
+########################################
+# Python virtual environments (if used)
+########################################
+
+venv/
+.env/
+__pycache__/
+*.pyc
+
+########################################
+# Misc
+########################################
+
+*.swp
+*.swo
