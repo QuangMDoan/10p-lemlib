@@ -44,26 +44,7 @@ EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(f
 # that are in the directory include/LIBNAME
 TEMPLATE_FILES=$(INCDIR)/$(LIBNAME)/*.h $(INCDIR)/$(LIBNAME)/*.hpp
 
-.PHONY: bootstrap force-bootstrap
-bootstrap:
-	@if [ ! -f "$(BOOTSTRAP_FIRMWARE_MARKER)" ]; then \
-		echo "[bootstrap] Missing $(BOOTSTRAP_FIRMWARE_MARKER). Re-applying PROS templates..."; \
-		set -e; \
-		for template in $(BOOTSTRAP_REQUIRED_TEMPLATES); do \
-			echo "[bootstrap] Applying $$template"; \
-			pros c apply "$$template" --project . --install --download; \
-		done; \
-		set +e; \
-		for template in $(BOOTSTRAP_OPTIONAL_TEMPLATES); do \
-			echo "[bootstrap] Applying $$template (optional)"; \
-			if ! pros c apply "$$template" --project . --install --download; then \
-				echo "[bootstrap] Warning: $$template failed to apply. Skipping."; \
-			fi; \
-		done; \
-	else \
-		echo "[bootstrap] Firmware present. Skipping template apply."; \
-	fi
-
+.PHONY: force-bootstrap
 force-bootstrap:
 	@echo "[force-bootstrap] Re-applying PROS templates..."
 	@set -e; \
@@ -79,9 +60,7 @@ force-bootstrap:
 		fi; \
 	done
 
-quick: bootstrap
-
-.DEFAULT_GOAL=quick
+.DEFAULT_GOAL=force-bootstrap
 
 ################################################################################
 ################################################################################
