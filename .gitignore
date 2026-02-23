@@ -23,7 +23,7 @@
 ########################################
 # PROS System Files
 ########################################
-
+project.pros
 # Temporary PROS files
 .pros/
 *.bak
