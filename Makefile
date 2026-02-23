@@ -58,9 +58,19 @@ force-bootstrap:
 		if ! pros c apply "$$template" --project . --install --download --force-apply; then \
 			echo "[force-bootstrap] Warning: $$template failed to apply. Skipping."; \
 		fi; \
-	done
+	done; \
+	if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then \
+		if git ls-files --error-unmatch .gitignore >/dev/null 2>&1; then \
+			echo "[force-bootstrap] Restoring .gitignore from git restore"; \
+			git restore --source=HEAD -- .gitignore; \
+		else \
+			echo "[force-bootstrap] Warning: .gitignore is not tracked; skipping restore."; \
+		fi; \
+	else \
+		echo "[force-bootstrap] Warning: Not a git repo; skipping .gitignore restore."; \
+	fi
 
-.DEFAULT_GOAL=force-bootstrap
+.DEFAULT_GOAL=quick
 
 ################################################################################
 ################################################################################
