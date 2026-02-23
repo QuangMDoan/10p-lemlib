@@ -1,7 +1,7 @@
 ARCHTUPLE=arm-none-eabi-
 DEVICE=VEX EDR V5
 
-MFLAGS=-mcpu=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=hard -Os -g -mthumb
+MFLAGS=-mcpu=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=hard -Os -g
 CPPFLAGS=-D_POSIX_THREADS -D_UNIX98_THREAD_MUTEX_ATTRIBUTES -D_POSIX_TIMERS -D_POSIX_MONOTONIC_CLOCK
 GCCFLAGS=-ffunction-sections -fdata-sections -fdiagnostics-color -funwind-tables
 
@@ -20,8 +20,8 @@ WARNFLAGS+=-Wno-psabi
 SPACE := $() $()
 COMMA := ,
 
-C_STANDARD?=gnu2x
-CXX_STANDARD?=gnu++23
+C_STANDARD?=gnu23
+CXX_STANDARD?=gnu++26
 
 DEPDIR := .d
 $(shell mkdir -p $(DEPDIR))
@@ -240,7 +240,8 @@ $(COLD_BIN): $(COLD_ELF)
 
 $(COLD_ELF): $(COLD_LIBRARIES)
 	$(VV)mkdir -p $(dir $@)
-	$(call test_output_2,Creating cold package with $(ARCHIVE_TEXT_LIST) ,$(LD) $(LDFLAGS) $(call wlprefix,--gc-keep-exported --whole-archive $^ -lstdc++ --no-whole-archive) $(call wlprefix,-T$(FWDIR)/v5.ld $(LNK_FLAGS) -o $@),$(OK_STRING))
+	$(call _pros_ld_timestamp)
+	$(call test_output_2,Creating cold package with $(ARCHIVE_TEXT_LIST) ,$(LD) $(LDFLAGS) $(LDTIMEOBJ) $(call wlprefix,--gc-keep-exported --whole-archive $(filter-out $(LDTIMEOBJ),$^) -lstdc++ --no-whole-archive) $(call wlprefix,-T$(FWDIR)/v5.ld $(LNK_FLAGS) -o $@),$(OK_STRING))
 	$(call test_output_2,Stripping cold package ,$(OBJCOPY) --strip-symbol=install_hot_table --strip-symbol=__libc_init_array --strip-symbol=_PROS_COMPILE_DIRECTORY --strip-symbol=_PROS_COMPILE_TIMESTAMP --strip-symbol=_PROS_COMPILE_TIMESTAMP_INT $@ $@, $(DONE_STRING))
 	@echo Section sizes:
 	-$(VV)$(SIZETOOL) $(SIZEFLAGS) $@ $(SIZES_SED) $(SIZES_NUMFMT)
@@ -289,12 +290,12 @@ $(VV)mkdir -p $(dir $(LDTIMEOBJ))
 @# 
 @# const int _PROS_COMPILE_TIMESTAMP_INT = $(( $(date +%s) - $(date +%z) * 3600 ))
 @# char const * const _PROS_COMPILE_TIEMSTAMP = __DATE__ " " __TIME__
-@# char const * const _PROS_COMPILE_DIRECTORY = "$(shell pwd | tail -c 23)";
+@# char const * const _PROS_COMPILE_DIRECTORY = "$(shell pwd | tail -c23)";
 @#
 @# The shell command $$(($$(date +%s)+($$(date +%-z)/100*3600))) fetches the current
 @# unix timestamp, and then adds the UTC timezone offset to account for time zones.
 
-$(call test_output_2,Adding timestamp ,echo 'const int _PROS_COMPILE_TIMESTAMP_INT = $(shell echo $$(($$(date +%s)+($$(date +%-z)/100*3600)))); char const * const _PROS_COMPILE_TIMESTAMP = __DATE__ " " __TIME__; char const * const _PROS_COMPILE_DIRECTORY = "$(wildcard $(shell pwd | tail -c 23))";' | $(CC) -c -x c $(CFLAGS) $(EXTRA_CFLAGS) -o $(LDTIMEOBJ) -,$(OK_STRING))
+$(call test_output_2,Adding timestamp ,echo 'const int _PROS_COMPILE_TIMESTAMP_INT = $(shell echo $$(($$(date +%s)+($$(date +%-z)/100*3600)))); char const * const _PROS_COMPILE_TIMESTAMP = __DATE__ " " __TIME__; char const * const _PROS_COMPILE_DIRECTORY = "$(wildcard $(shell pwd | tail -c23))";' | $(CC) -c -x c $(CFLAGS) $(EXTRA_CFLAGS) -o $(LDTIMEOBJ) -,$(OK_STRING))
 endef
 
 # these rules are for build-compile-commands, which just print out sysroot information
