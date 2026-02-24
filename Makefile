@@ -50,12 +50,12 @@ force-bootstrap:
 	@set -e; \
 	for template in $(BOOTSTRAP_REQUIRED_TEMPLATES); do \
 		echo "[force-bootstrap] Applying $$template"; \
-		pros c apply "$$template" --project . --install --download --force-apply; \
+		pros c apply "$$template" --project . --install --download --force --force-apply; \
 	done; \
 	set +e; \
 	for template in $(BOOTSTRAP_OPTIONAL_TEMPLATES); do \
 		echo "[force-bootstrap] Applying $$template (optional)"; \
-		if ! pros c apply "$$template" --project . --install --download --force-apply; then \
+		if ! pros c apply "$$template" --project . --install --download --force --force-apply; then \
 			echo "[force-bootstrap] Warning: $$template failed to apply. Skipping."; \
 		fi; \
 	done; \
