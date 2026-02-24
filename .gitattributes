@@ -1,1 +1,7 @@
-* text=auto
+# Only normalize specific source code file types
+*.cpp text
+*.hpp text
+*.h text
+*.c text
+*.mk text
+Makefile text
