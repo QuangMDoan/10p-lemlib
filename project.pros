@@ -5,11 +5,12 @@
         "target": "v5",
         "templates": {
             "LemLib": {
+                "location": "C:\\Users\\quang\\AppData\\Roaming\\PROS\\templates\\LemLib@0.5.6",
                 "metadata": {
-                    "origin": "lemlib"
+                    "origin": "LemLib"
                 },
                 "name": "LemLib",
-                "py/object": "pros.conductor.templates.template.Template",
+                "py/object": "pros.conductor.templates.local_template.LocalTemplate",
                 "supported_kernels": "^4.2.1",
                 "system_files": [
                     "firmware/LemLib.a",
@@ -47,7 +48,7 @@
                 "version": "0.5.6"
             },
             "kernel": {
-                "location": "",
+                "location": "C:\\Users\\quang\\AppData\\Roaming\\PROS\\templates\\kernel@4.2.2",
                 "metadata": {
                     "cold_addr": "58720256",
                     "cold_output": "bin/cold.package.bin",
@@ -123,7 +124,7 @@
                 "version": "4.2.2"
             },
             "liblvgl": {
-                "location": "",
+                "location": "C:\\Users\\quang\\AppData\\Roaming\\PROS\\templates\\liblvgl@9.2.0",
                 "metadata": {
                     "origin": "pros-mainline"
                 },

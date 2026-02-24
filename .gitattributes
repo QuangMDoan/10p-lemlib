@@ -1,7 +1,2 @@
-# Only normalize specific source code file types
-*.cpp text
-*.hpp text
-*.h text
-*.c text
-*.mk text
-Makefile text
+# Store text as LF in repo; allow CRLF checkout via core.autocrlf
+* text=auto
