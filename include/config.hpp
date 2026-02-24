@@ -4,6 +4,7 @@
 #include "pros/motors.hpp"
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
+#include "pros/distance.hpp"
 #include "lemlib/api.hpp"
 
 // Motor Ports

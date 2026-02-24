@@ -37,6 +37,9 @@ project.pros
 .vscode/
 *.code-workspace
 
+# clangd index/cache
+.cache/
+
 ########################################
 # macOS
 ########################################
