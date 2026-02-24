@@ -1,0 +1,6 @@
+# Enforce LF line endings for all text files (prevents issues with PROS bootstrap)
+* text=auto eol=lf
+
+# Windows-specific files can use CRLF
+*.bat text eol=crlf
+*.ps1 text eol=crlf

@@ -4,6 +4,7 @@
 #include "pros/motors.hpp"
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
+#include "pros/distance.hpp"
 #include "lemlib/api.hpp"
 
 // Motor Ports
@@ -21,9 +22,9 @@ inline pros::Motor middle_roller(MIDDLE_ROLLER_PORT, pros::v5::MotorGears::blue)
 inline pros::Motor top_roller(TOP_ROLLER_PORT, pros::v5::MotorGears::blue);
 
 // Pneumatics
-inline pros::ADIDigitalOut wing('D');
-inline pros::ADIDigitalOut matchload_bar('A');
-inline pros::ADIDigitalOut stopper('C'); // expansion solenoid
+inline pros::adi::DigitalOut wing('D');
+inline pros::adi::DigitalOut matchload_bar('A');
+inline pros::adi::DigitalOut stopper('C'); // expansion solenoid
 
 // ============ DRIVETRAIN ============
 // left motor group
