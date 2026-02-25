@@ -1,0 +1,7 @@
+CompileFlags:
+  Add:
+    - -Iinclude
+    - -I../include
+    - -Isrc
+    - -I.
+    - -std=gnu++20
