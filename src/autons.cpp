@@ -288,10 +288,13 @@ void seventy_skills() {
 }
 
 void skills() {
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.setPose(-55, 0, -90);
     chassis.arcade(20, 0);
     pros::delay(650);
+    chassis.arcade(-10, 0);
+    pros::delay(200);
     chassis.arcade(0, 0);
     pros::delay(1000);
     chassis.arcade(50, 0);
@@ -304,7 +307,7 @@ void skills() {
     }
 
     chassis.arcade(-67, 0);
-    pros::delay(850);
+    pros::delay(750);
     chassis.arcade(0, 0);
     
     pros::delay(100);
@@ -312,8 +315,8 @@ void skills() {
     chassis.turnToHeading(-90, 400);
     chassis.waitUntilDone();
 
-    chassis.arcade(30, 0);
-    pros::delay(1200);
+    chassis.arcade(15, 0);
+    pros::delay(2000);
     
     float soft_reset_x = (-front_left_distance_sensor.get() - front_right_distance_sensor.get()) / 50.8 -  28;
     float soft_reset_y = left_distance_sensor.get() / 25.4 - 66.14;
@@ -326,9 +329,9 @@ void skills() {
     chassis.waitUntilDone();
     chassis.moveToPoint(-21, 17, 1500, {.maxSpeed = 60});
     chassis.waitUntilDone();
-    chassis.turnToPoint(-10.5, 5, 750, {.forwards = false});
+    chassis.turnToPoint(-11, 5, 750, {.forwards = false});
     chassis.waitUntilDone();
-    chassis.moveToPoint(-10.5, 5, 1000, {.forwards = false});
+    chassis.moveToPoint(-11, 5, 1000, {.forwards = false});
     matchload_bar.set_value(true);
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(800);
@@ -347,7 +350,7 @@ void skills() {
     chassis.setPose(chassis.getPose().x, soft_reset_y, -90);
     chassis.moveToPoint(-65, 47, 1000, {.maxSpeed = 60});
     chassis.waitUntilDone();
-    chassis.arcade(50, 0);
+    chassis.arcade(20, 0);
     pros::delay(1350);
     chassis.arcade(0, 0);
     chassis.moveToPoint(-57, 47, 1000, {.forwards = false});
@@ -369,30 +372,80 @@ void skills() {
     chassis.moveToPoint(15, 47, 750, {.forwards = false, .minSpeed = 127});
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(250);
+    intake_manager.set_state(IntakeState::IDLE);
+    chassis.waitUntil(5);
+    intake_manager.set_state(IntakeState::SCORE_HIGH);
     chassis.waitUntilDone();
     chassis.arcade(-30, 0);
-    intake_manager.set_state(IntakeState::IDLE);
-    chassis.waitUntilDone();
-    intake_manager.set_state(IntakeState::SCORE_HIGH);
     pros::delay(1500);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(65, 48, 1000, {.maxSpeed = 60});
+    soft_reset_y = 66 - left_distance_sensor.get() / 25.4;
+    chassis.setPose(chassis.getPose().x, soft_reset_y, chassis.getPose().theta);
+    chassis.moveToPoint(65, 49, 1000, {.maxSpeed = 60});
     matchload_bar.set_value(true);
     chassis.waitUntilDone();
     intake_manager.set_state(IntakeState::INTAKE);
-    chassis.arcade(50, 0);
-    pros::delay(1350);
+    chassis.arcade(20, 0);
+    pros::delay(1600);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(15, 48, 750, {.forwards = false, .minSpeed = 127});
+    chassis.moveToPoint(15, 49, 750, {.forwards = false, .minSpeed = 127});
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(250);
+    intake_manager.set_state(IntakeState::IDLE);
+    chassis.waitUntil(45);
+    intake_manager.set_state(IntakeState::SCORE_HIGH);
     chassis.waitUntilDone();
     chassis.arcade(-30, 0);
-    intake_manager.set_state(IntakeState::IDLE);
     chassis.waitUntilDone();
-    intake_manager.set_state(IntakeState::SCORE_HIGH);
-    pros::delay(1500);
+    pros::delay(1600);
+    matchload_bar.set_value(false);
     chassis.arcade(0, 0);
+    chassis.moveToPoint(42, 30, 1000);
+    chassis.waitUntilDone();
+    intake_manager.set_state(IntakeState::INTAKE);
+    chassis.moveToPose(56, 13, 180, 1500);
+    chassis.waitUntilDone();
+    chassis.turnToHeading(150, 1000);
+    chassis.waitUntilDone();
+    chassis.arcade(60, 0);
+    pros::delay(2550);
+    chassis.turnToHeading(-165, 750);
+    chassis.waitUntilDone();
+    chassis.arcade(0, 0);
+    chassis.arcade(-45, 0);
+    pros::delay(1000);
+    chassis.arcade(0, 0);
+
+    soft_reset_x = 67 - left_distance_sensor.get() / 25.4;
+    soft_reset_y = -64 + front_right_distance_sensor.get() / 25.4;
+    chassis.setPose(soft_reset_x, soft_reset_y, 180);
+
+    chassis.moveToPoint(37, -57, 2000);
+    chassis.waitUntilDone();
+    chassis.turnToHeading(90, 750);
+    chassis.waitUntilDone();
+    soft_reset_y = -66 + right_distance_sensor.get() / 25.4;
+    chassis.setPose(chassis.getPose().x, soft_reset_y, chassis.getPose().theta);
+    chassis.moveToPoint(65, -47, 1000, {.maxSpeed = 50});
+    matchload_bar.set_value(true);
+    chassis.waitUntilDone();
+    intake_manager.set_state(IntakeState::INTAKE);
+    chassis.arcade(20, 0);
+    pros::delay(1600);
+    chassis.arcade(0, 0);
+    chassis.moveToPoint(50, -47, 1000, {.forwards = false});
+    chassis.waitUntilDone();
+    chassis.turnToPoint(-35, -60, 750, {.forwards = false});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-35, -60, 1500, {.forwards = false});
+    chassis.waitUntilDone();
+    chassis.turnToPoint(30, -58, 750, {.forwards = false});
+    matchload_bar.set_value(false);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(30, -58, 3000, {.forwards = false});
+    chassis.waitUntilDone();
+    chassis.swingToHeading(270, DriveSide::LEFT, 1500, {.direction = AngularDirection::CW_CLOCKWISE});
+    chassis.waitUntilDone();
 }
 
 void simple_skills(){
