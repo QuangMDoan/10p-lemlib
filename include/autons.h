@@ -10,6 +10,7 @@ void four_plus_three_mid();
 void four_plus_three_low();
 void drive_off();
 void skills();
+void seventy_skills();
 void simple_skills();
 
 // Auton selection arrays

@@ -48,6 +48,7 @@ inline pros::Imu imu(13);
 // Distance sensors for DSR (Distance Sensor Reset)
 // Note: Some may not be wired yet
 inline pros::Distance left_distance_sensor(4);     // left side distance sensor
+inline pros::Distance right_distance_sensor(20);   // right side distance sensor
 inline pros::Distance front_left_distance_sensor(7);   // front left distance sensor
 inline pros::Distance front_right_distance_sensor(6);  // front right distance sensor
 

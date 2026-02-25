@@ -72,7 +72,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	four_plus_three_mid();
+	skills();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
