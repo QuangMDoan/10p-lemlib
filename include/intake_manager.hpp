@@ -90,7 +90,7 @@ public:
 				stopper.set_value(in_cooldown ? false : true);
 				intake.move(127);
 				middle_roller.move(40);
-				top_roller.move(-40);
+				top_roller.move(-30);
 				break;
 
 			case IntakeState::SCORE_LOW_SKILLS:
