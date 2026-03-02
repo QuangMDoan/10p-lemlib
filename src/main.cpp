@@ -3,21 +3,21 @@
 #include "config.hpp"
 #include "intake_manager.hpp"
 #include "autons.h"
+#include "lemlib/pose.hpp"
+#include "liblvgl/llemu.hpp"
+#include "pid_tune.hpp"
+#include "pros/llemu.hpp"
+#include "pros/misc.h"
 
+// Set pid_tuning_mode to true to enable pid tuning
+volatile bool pid_tuning_mode = false;
+static PidTune tuning = PidTune(PidTarget::ANGULAR); 
 /**
  * A callback function for LLEMU's center button.
  *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
  */
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+	pid_tuning_mode = !pid_tuning_mode;
 }
 
 /**
@@ -27,17 +27,19 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize(); // initialize brain screen
+	pros::lcd::initialize();
 	chassis.calibrate(); // calibrate sensors
-	// print position to brain screen
 	pros::Task screen_task([&]() {
 		while (true) {
-			// print robot location to the brain screen
-			pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-			pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-			// delay to save resources
-			pros::delay(20);
+			if (pid_tuning_mode) {
+				pros::lcd::print(2, "tuning: %s", tuning.targetName());
+				pros::lcd::print(3, "lateral kP, kD: %.3f, %.3f", lateral_controller.kP, lateral_controller.kD);
+				pros::lcd::print(4, "angular kP, kD: %.3f, %.3f", angular_controller.kP, angular_controller.kD);
+			}
+
+			lemlib::Pose pose = chassis.getPose();
+			pros::lcd::print(0, "x,y,theta: %.3f, %.3f, %.3f", pose.x, pose.y, pose.theta); // x
+			pros::delay(250);
 		}
 	});
 }
@@ -87,10 +89,18 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	bool matchload_state = false;
+
+	if (pid_tuning_mode) {
+		while(true){
+			tuning.tune(master);
+			pros::delay(10);
+		}
+	}
 
 	while (true) {
 		// ============ DRIVETRAIN CONTROL ============
