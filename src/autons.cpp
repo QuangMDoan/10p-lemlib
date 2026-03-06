@@ -304,7 +304,12 @@ void skills() {
         pros::delay(300);
         chassis.arcade(-20, 0);
         pros::delay(300);
+        chassis.arcade(0, 0);
+        pros::delay(300);
     }
+
+    chassis.arcade(0, 0);
+    pros::delay(500);
 
     chassis.arcade(-67, 0);
     pros::delay(750);
@@ -325,9 +330,9 @@ void skills() {
     chassis.moveToPoint(-29, 0, 1000, {.forwards = false});
     chassis.waitUntilDone();
 
-    chassis.turnToPoint(-21, 17, 750);
+    chassis.turnToPoint(-20, 17, 750);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-21, 17, 1500, {.maxSpeed = 60});
+    chassis.moveToPoint(-20, 17, 1500, {.maxSpeed = 60});
     chassis.waitUntilDone();
     chassis.turnToPoint(-11, 6, 750, {.forwards = false});
     chassis.waitUntilDone();
@@ -336,9 +341,11 @@ void skills() {
     intake_manager.set_state(IntakeState::IDLE);
     chassis.waitUntilDone();
     intake_manager.set_state(IntakeState::UNJAM);
-    pros::delay(150);
+    pros::delay(350);
+    intake_manager.set_state(IntakeState::INTAKE);
+    pros::delay(100);
     intake_manager.set_state(IntakeState::IDLE);
-    AutonUtils::driveDistance(4, false, 127, 600);
+    AutonUtils::driveDistance(2, false, 127, 600);
     intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
     AutonUtils::driveDistance(2, true, 127, 600);
     pros::delay(700);
@@ -347,13 +354,16 @@ void skills() {
     intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
     pros::delay(900);
     intake_manager.set_state(IntakeState::UNJAM);
-    pros::delay(100);
+    pros::delay(300);
     intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
-    pros::delay(900);
+    pros::delay(700);
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(100);
     intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
-    pros::delay(1000);
+    pros::delay(500);
+    chassis.arcade(-10, 0);
+    pros::delay(500);
+    chassis.arcade(0, 0);
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.moveToPoint(-43, 45, 2000);
     chassis.waitUntilDone();
@@ -369,16 +379,16 @@ void skills() {
     chassis.arcade(20, 0);
     pros::delay(1800);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(-57, 47, 1000, {.forwards = false});
+    chassis.moveToPoint(-53, 47, 1000, {.forwards = false});
     chassis.waitUntilDone();
     chassis.turnToPoint(-35, 60, 750, {.forwards = false});
     chassis.waitUntilDone();
     chassis.moveToPoint(-35, 60, 1500, {.forwards = false});
     chassis.waitUntilDone();
-    chassis.turnToPoint(30, 60, 750, {.forwards = false});
+    chassis.turnToPoint(30, 58.5, 750, {.forwards = false});
     matchload_bar.set_value(false);
     chassis.waitUntilDone();
-    chassis.moveToPoint(30, 60, 3000, {.forwards = false});
+    chassis.moveToPoint(30, 58.8, 3000, {.forwards = false});
     chassis.waitUntilDone();
     chassis.swingToHeading(90, DriveSide::LEFT, 1500, {.direction = AngularDirection::CW_CLOCKWISE});
     chassis.waitUntilDone();
@@ -395,14 +405,14 @@ void skills() {
     chassis.arcade(-30, 0);
     pros::delay(1500);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(65, 48, 1000, {.maxSpeed = 60});
+    chassis.moveToPoint(65, 47, 1000, {.maxSpeed = 60});
     matchload_bar.set_value(true);
     chassis.waitUntilDone();
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.arcade(20, 0);
     pros::delay(1800);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(15, 50, 1000, {.forwards = false, .minSpeed = 127});
+    chassis.moveToPoint(15, 49, 1000, {.forwards = false, .minSpeed = 127});
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(250);
     intake_manager.set_state(IntakeState::IDLE);
@@ -418,7 +428,7 @@ void skills() {
     chassis.moveToPoint(42, 30, 1000);
     chassis.waitUntilDone();
     intake_manager.set_state(IntakeState::INTAKE);
-    chassis.moveToPose(57, 0, 180, 1500);
+    chassis.moveToPose(55, 0, 180, 1500);
     chassis.waitUntilDone();
     chassis.arcade(70, 0);
     pros::delay(1800);
