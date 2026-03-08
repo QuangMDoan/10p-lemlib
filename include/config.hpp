@@ -47,7 +47,7 @@ inline lemlib::Drivetrain drivetrain(&left_motor_group,          // left motor g
 inline pros::Imu imu(13);
 
 // Distance sensors for DSR (Distance Sensor Reset)
-inline pros::Distance left_distance_sensor(4);        // left side distance sensor
+inline pros::Distance left_distance_sensor(5);        // left side distance sensor
 inline pros::Distance right_distance_sensor(20);      // right side distance sensor
 inline pros::Distance front_left_distance_sensor(7);  // front left distance sensor
 inline pros::Distance front_right_distance_sensor(6); // front right distance sensor

@@ -90,14 +90,14 @@ public:
 			stopper.set_value(true);
 			intake.move(127);
 			middle_roller.move(127);
-			top_roller.move(33);
+			top_roller.move(36);
 			break;
 
 		case IntakeState::SCORE_MID_SKILLS:
 			// intake and middle roller run forward, top roller runs reversed
 			stopper.set_value(in_cooldown ? false : true);
 			intake.move(127);
-			middle_roller.move(40);
+			middle_roller.move(35);
 			top_roller.move(-25);
 			break;
 
