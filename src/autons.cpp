@@ -355,12 +355,15 @@ void skills()
     chassis.waitUntilDone();
 
     chassis.arcade(40, 0);
-    pros::delay(100);
+    pros::delay(150);
     chassis.arcade(0, 0);
     intake_manager.set_state(IntakeState::SCORE_HIGH);
     pros::delay(125);
     intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
     pros::delay(4000);
+    chassis.arcade(-30, 0);
+    pros::delay(150);
+    chassis.arcade(0, 0);
 
     chassis.moveToPoint(-43, 45, 2000);
     pros::delay(100);
@@ -408,7 +411,7 @@ void skills()
     chassis.arcade(0, 0);
 
     // go to second matchloader
-    chassis.moveToPoint(68, 47, 1000, {.maxSpeed = 50});
+    chassis.moveToPoint(68, 47, 1250, {.maxSpeed = 50});
     matchload_bar.set_value(true);
     chassis.waitUntilDone();
     intake_manager.set_state(IntakeState::INTAKE);
@@ -416,12 +419,13 @@ void skills()
     pros::delay(1500);
     chassis.arcade(0, 0);
     chassis.moveToPoint(15, 49, 1000, {.forwards = false, .minSpeed = 100});
+    chassis.waitUntil(30);
 
     // score balls from second matchloader
     intake_manager.set_state(IntakeState::UNJAM);
     pros::delay(50);
     intake_manager.set_state(IntakeState::IDLE);
-    chassis.waitUntil(47);
+    chassis.waitUntil(48);
     intake_manager.set_state(IntakeState::SCORE_HIGH);
     chassis.waitUntilDone();
     chassis.arcade(-50, 0);
@@ -435,9 +439,9 @@ void skills()
     intake_manager.set_state(IntakeState::INTAKE);
 
     // clear opposite park zone
-    chassis.moveToPoint(53, 5, 1500);
+    chassis.moveToPoint(53, 20, 1500);
     chassis.waitUntilDone();
-    chassis.turnToHeading(175, 500);
+    chassis.turnToHeading(170, 500);
     chassis.waitUntilDone();
     chassis.arcade(70, 0);
     pros::delay(1800);
@@ -473,9 +477,9 @@ void skills()
     chassis.moveToPoint(50, -47, 1000, {.forwards = false});
     chassis.turnToPoint(35, -60, 750, {.forwards = false}, false);
     chassis.moveToPoint(35, -60, 1500, {.forwards = false}, false);
-    chassis.turnToPoint(30, -60, 750, {.forwards = false}, false);
+    chassis.turnToPoint(30, -63, 750, {.forwards = false}, false);
     matchload_bar.set_value(false);
-    chassis.moveToPose(-30, -60, 90, 3000, {.forwards = false}, false);
+    chassis.moveToPose(-30, -63, 90, 3000, {.forwards = false}, false);
     chassis.swingToHeading(270, DriveSide::LEFT, 1500, {.direction = AngularDirection::CW_CLOCKWISE}, false);
     chassis.waitUntilDone();
     soft_reset_y = -66 + left_distance_sensor.get() / 25.4;
