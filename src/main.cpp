@@ -78,7 +78,7 @@ void competition_initialize() {}
  */
 void autonomous()
 {
-	skills();
+	sawp();
 }
 /**
  * Runs the operator control code. This function will be started in its own task

@@ -28,10 +28,11 @@ void sawp()
     chassis.moveToPoint(-22, -24, 750, {.maxSpeed = 60, .minSpeed = 50, .earlyExitRange = 5});
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.waitUntilDone();
-    chassis.swingToPoint(-22, 20, DriveSide::LEFT, 500);
+    chassis.swingToPoint(-24, 20, DriveSide::LEFT, 500);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-22, 20, 1250, {.maxSpeed = 75, .minSpeed = 60, .earlyExitRange = 8});
+    chassis.moveToPoint(-24, 20, 1250, {.maxSpeed = 75, .minSpeed = 60, .earlyExitRange = 8});
     chassis.waitUntilDone();
+    matchload_bar.set_value(true);
     chassis.swingToPoint(-44, 35, DriveSide::LEFT, 500);
     chassis.waitUntilDone();
     chassis.moveToPoint(-44, 35, 1000);
@@ -48,7 +49,7 @@ void sawp()
     chassis.arcade(-30, 0);
     pros::delay(600);
     chassis.arcade(0, 0);
-    chassis.moveToPoint(-62, 46, 1000, {.maxSpeed = 50});
+    chassis.moveToPose(-62, 47, -90, 1000, {.maxSpeed = 50});
     matchload_bar.set_value(true);
     intake_manager.set_state(IntakeState::INTAKE);
     chassis.waitUntilDone();
@@ -58,9 +59,9 @@ void sawp()
 
     chassis.moveToPoint(-43, 46, 750, {.forwards = false, .minSpeed = 75, .earlyExitRange = 2});
     chassis.waitUntilDone();
-    chassis.swingToPoint(-11, 11, DriveSide::LEFT, 750, {.forwards = false});
+    chassis.swingToPoint(-11, 6, DriveSide::LEFT, 750, {.forwards = false});
     chassis.waitUntilDone();
-    chassis.moveToPoint(-11, 11, 1500, {.forwards = false});
+    chassis.moveToPoint(-11, 6, 1500, {.forwards = false});
     chassis.waitUntil(30);
     intake_manager.set_state(IntakeState::SCORE_MID);
 }
