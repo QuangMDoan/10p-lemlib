@@ -24,7 +24,8 @@ inline pros::Motor top_roller(TOP_ROLLER_PORT, pros::v5::MotorGears::blue);
 // Pneumatics
 inline pros::adi::DigitalOut wing('D');
 inline pros::adi::DigitalOut matchload_bar('A');
-inline pros::adi::DigitalOut stopper('C'); // expansion solenoid
+inline pros::adi::DigitalOut stopper('C');
+inline pros::adi::DigitalOut intake_lift('B');
 
 // ============ DRIVETRAIN ============
 // left motor group
