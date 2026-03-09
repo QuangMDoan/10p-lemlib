@@ -98,6 +98,7 @@ void opcontrol()
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	bool matchload_state = false;
+	static bool y_pressed = false;
 
 	while (true)
 	{
@@ -145,6 +146,20 @@ void opcontrol()
 		{
 			pros::delay(10);
 			intake_manager.set_state(IntakeState::IDLE);
+		}
+
+		// Y button toggle for matchload and intake lift
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && !y_pressed)
+		{
+			matchload_bar.set_value(true);
+			intake_lift.set_value(true);
+			y_pressed = true;
+		}
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && y_pressed)
+		{
+			matchload_bar.set_value(false);
+			intake_lift.set_value(false);
+			y_pressed = false;
 		}
 
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A))

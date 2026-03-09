@@ -105,7 +105,7 @@ public:
 		case IntakeState::SCORE_LOW_SKILLS:
 			// all rollers run reversed
 			stopper.set_value(in_cooldown ? false : true);
-			intake.move(-70);
+			intake.move(-40);
 			middle_roller.move(-127);
 			top_roller.move(-127);
 			break;
