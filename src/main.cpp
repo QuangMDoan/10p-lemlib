@@ -14,6 +14,9 @@ void on_center_button()
 {
 	static bool pressed = false;
 	pressed = !pressed;
+	
+	// TODO: This should be changed to a more useful function, such as an autonomous selector 
+	// or a screen for displaying information about the robot.
 	if (pressed)
 	{
 		pros::lcd::set_text(2, "I was pressed!");
@@ -32,19 +35,31 @@ void on_center_button()
  */
 void initialize()
 {
-	pros::lcd::initialize(); // initialize brain screen
-	chassis.calibrate();	 // calibrate sensors
-	// print position to brain screen
-	pros::Task screen_task([&]()
-						   {
-		while (true) {
-			// print robot location to the brain screen
-			pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-			pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-			// delay to save resources
-			pros::delay(20);
-		} });
+	pros::lcd::initialize();
+	pros::lcd::register_btn1_cb(on_center_button);
+
+	pros::lcd::set_text(4, "Init: calibrating sensors");
+	chassis.calibrate();
+
+	const auto imu_status = imu.get_status();
+	if (imu_status == pros::ImuStatus::ready) {
+		pros::lcd::set_text(4, "IMU ready");
+	}	else if (imu_status == pros::ImuStatus::calibrating) {
+		pros::lcd::set_text(4, "IMU still calibrating");
+	} else {
+		pros::lcd::set_text(4, "IMU calibrating error");
+	}
+
+	static pros::Task screen_task([](){
+			while (true)
+			{
+				const auto pose = chassis.getPose();
+				pros::lcd::print(0, "X: %.2f", pose.x);
+				pros::lcd::print(1, "Y: %.2f", pose.y);
+				pros::lcd::print(2, "Theta: %.1f", pose.theta);
+				pros::delay(500);
+			}
+		},	"Pose display");
 }
 
 /**
