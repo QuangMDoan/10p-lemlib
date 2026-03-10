@@ -73,8 +73,9 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
-	skills();
+void autonomous()
+{
+	sawp();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -94,6 +95,7 @@ void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 	bool matchload_state = false;
+	static bool y_pressed = false;
 
 	if (pid_tuning_mode) {
 		while(true){
@@ -109,51 +111,74 @@ void opcontrol() {
 
 		chassis.arcade(left_stick, right_stick);
 
-
 		// ============ INTAKE CONTROL ============
 		// Priority: R1 > L2 > L1 > X (highest to lowest priority)
 		// If multiple buttons pressed, the highest priority one wins
 
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+		{
 			intake_manager.set_state(IntakeState::INTAKE);
-		} 
-		
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
+		{
 			intake_manager.set_state(IntakeState::SCORE_MID);
-		} 
-		
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+		{
 			intake_manager.set_state(IntakeState::SCORE_LOW);
-		} 
-		
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+		{
 			intake_manager.set_state(IntakeState::SCORE_HIGH);
-		} 
-		
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
+		{
 			intake_manager.set_state(IntakeState::SCORE_MID_SKILLS);
-		} 
-		
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+		}
+
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+		{
 			intake_manager.set_state(IntakeState::SCORE_LOW_SKILLS);
-		} 
-		
-		else {
+		}
+
+		else
+		{
 			pros::delay(10);
 			intake_manager.set_state(IntakeState::IDLE);
 		}
 
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+		// Y button toggle for matchload and intake lift
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && !y_pressed)
+		{
+			matchload_bar.set_value(true);
+			intake_lift.set_value(true);
+			y_pressed = true;
+		}
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && y_pressed)
+		{
+			matchload_bar.set_value(false);
+			intake_lift.set_value(false);
+			y_pressed = false;
+		}
+
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A))
+		{
 			matchload_state = !matchload_state;
 			matchload_bar.set_value(matchload_state);
 			pros::delay(200);
 		}
 
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+		{
 			wing.set_value(true);
 		}
 
-		else {
+		else
+		{
 			wing.set_value(false);
 		}
 
