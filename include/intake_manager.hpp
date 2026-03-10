@@ -104,10 +104,10 @@ public:
 		// TODO: tune with pistonized intake once built
 		case IntakeState::SCORE_LOW_SKILLS:
 			// all rollers run reversed
-			stopper.set_value(in_cooldown ? false : true);
+			stopper.set_value(true);
 			intake.move(-40);
 			middle_roller.move(-127);
-			top_roller.move(-127);
+			top_roller.move(-60);
 			break;
 
 		case IntakeState::UNJAM:

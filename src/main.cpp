@@ -93,7 +93,7 @@ void competition_initialize() {}
  */
 void autonomous()
 {
-	sawp();
+	skills();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -163,17 +163,23 @@ void opcontrol()
 			intake_manager.set_state(IntakeState::IDLE);
 		}
 
-		// Y button toggle for matchload and intake lift
+		// Y button toggle for matchload sequence
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && !y_pressed)
 		{
 			matchload_bar.set_value(true);
+			pros::delay(150);
 			intake_lift.set_value(true);
+			pros::delay(150);
+			matchload_bar.set_value(false);
+			intake_manager.set_state(IntakeState::SCORE_HIGH);
 			y_pressed = true;
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) && y_pressed)
 		{
-			matchload_bar.set_value(false);
+			intake_manager.set_state(IntakeState::IDLE);
 			intake_lift.set_value(false);
+			pros::delay(100);
+			matchload_bar.set_value(false);
 			y_pressed = false;
 		}
 
