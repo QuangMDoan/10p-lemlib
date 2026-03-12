@@ -5,11 +5,13 @@
 #include <cmath>
 #include <algorithm>
 
-namespace AutonUtils {
+namespace AutonUtils
+{
 
 	/* ================= ENUMS ================= */
 
-	enum class DistanceComparison {
+	enum class DistanceComparison
+	{
 		LESS_THAN,
 		LESS_EQUAL,
 		GREATER_THAN,
@@ -25,9 +27,10 @@ namespace AutonUtils {
 	/* ================= BASIC LEMLIB DRIVING ================= */
 
 	inline void driveDistance(float distance_inches,
-	                          bool forwards = true,
-	                          float maxSpeed = 127,
-	                          int timeout_ms = 5000) {
+							  bool forwards = true,
+							  float maxSpeed = 127,
+							  int timeout_ms = 5000)
+	{
 
 		lemlib::Pose pose = chassis.getPose();
 
@@ -41,29 +44,31 @@ namespace AutonUtils {
 			target_x,
 			target_y,
 			timeout_ms,
-			{ .forwards = forwards, .maxSpeed = maxSpeed }
-		);
+			{.forwards = forwards, .maxSpeed = maxSpeed});
 		chassis.waitUntilDone();
 	}
 
 	inline void driveForwardDistance(float distance_inches,
-	                                 int maxSpeed = 127,
-	                                 int timeout_ms = 5000) {
+									 int maxSpeed = 127,
+									 int timeout_ms = 5000)
+	{
 		driveDistance(distance_inches, true, maxSpeed, timeout_ms);
 	}
 
 	inline void driveBackwardDistance(float distance_inches,
-	                                  int maxSpeed = 127,
-	                                  int timeout_ms = 5000) {
+									  int maxSpeed = 127,
+									  int timeout_ms = 5000)
+	{
 		driveDistance(distance_inches, false, maxSpeed, timeout_ms);
 	}
 
 	/* ================= ASYNC DRIVE + DISTANCE WAITS ================= */
 
 	inline void startDriveDistance(float distance_inches,
-	                               bool forwards = true,
-	                               float maxSpeed = 127,
-	                               int timeout_ms = 5000) {
+								   bool forwards = true,
+								   float maxSpeed = 127,
+								   int timeout_ms = 5000)
+	{
 
 		driveStartPose = chassis.getPose();
 		driveTargetDistance = std::abs(distance_inches);
@@ -79,12 +84,13 @@ namespace AutonUtils {
 			target_x,
 			target_y,
 			timeout_ms,
-			{ .forwards = forwards, .maxSpeed = maxSpeed }
-		);
+			{.forwards = forwards, .maxSpeed = maxSpeed});
 	}
 
-	inline float getDriveDistanceTraveled() {
-		if (!driveActive) return 0.0f;
+	inline float getDriveDistanceTraveled()
+	{
+		if (!driveActive)
+			return 0.0f;
 
 		lemlib::Pose curr = chassis.getPose();
 		float dx = curr.x - driveStartPose.x;
@@ -93,11 +99,14 @@ namespace AutonUtils {
 	}
 
 	inline bool waitUntilDistanceTraveled(float inches,
-	                                      int timeout_ms = 2000) {
+										  int timeout_ms = 2000)
+	{
 		unsigned long start = pros::millis();
 
-		while (pros::millis() - start < (unsigned long)timeout_ms) {
-			if (getDriveDistanceTraveled() >= inches) {
+		while (pros::millis() - start < (unsigned long)timeout_ms)
+		{
+			if (getDriveDistanceTraveled() >= inches)
+			{
 				return true;
 			}
 			pros::delay(5);
@@ -105,40 +114,45 @@ namespace AutonUtils {
 		return false;
 	}
 
-	inline void waitUntilDriveDone() {
+	inline void waitUntilDriveDone()
+	{
 		chassis.waitUntilDone();
 		driveActive = false;
 	}
 
 	/* ================= SENSOR-BASED DRIVING ================= */
 
-	inline float smoothDistanceInches(pros::Distance& sensor) {
+	inline float smoothDistanceInches(pros::Distance &sensor)
+	{
 		const int SAMPLES = 3;
 		float sum = 0;
 		int valid = 0;
 
-		for (int i = 0; i < SAMPLES; i++) {
+		for (int i = 0; i < SAMPLES; i++)
+		{
 			int mm = sensor.get();
-			if (mm > 0) {
+			if (mm > 0)
+			{
 				sum += mm / 25.4f;
 				valid++;
 			}
 			pros::delay(2);
 		}
 
-		if (valid == 0) return -1;
+		if (valid == 0)
+			return -1;
 		return sum / valid;
 	}
 
 	inline bool driveUntilDistanceSensor(
-		pros::Distance& sensor,
+		pros::Distance &sensor,
 		float target_distance,
 		DistanceComparison comparison,
 		bool forwards = true,
 		int maxSpeed = 60,
 		int minSpeed = 30,
-		int timeout_ms = 1500
-	) {
+		int timeout_ms = 1500)
+	{
 		maxSpeed = std::clamp(maxSpeed, 0, 127);
 		minSpeed = std::clamp(minSpeed, 0, maxSpeed);
 
@@ -150,10 +164,12 @@ namespace AutonUtils {
 		left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-		while (pros::millis() - start < (unsigned long)timeout_ms) {
+		while (pros::millis() - start < (unsigned long)timeout_ms)
+		{
 
 			float dist = smoothDistanceInches(sensor);
-			if (dist < 0) {
+			if (dist < 0)
+			{
 				int cmd = forwards ? maxSpeed : -maxSpeed;
 				left_motor_group.move(cmd);
 				right_motor_group.move(cmd);
@@ -161,22 +177,24 @@ namespace AutonUtils {
 			}
 
 			bool condition_met = false;
-			switch (comparison) {
-				case DistanceComparison::LESS_THAN:
-					condition_met = (dist < target_distance + STOP_OFFSET);
-					break;
-				case DistanceComparison::LESS_EQUAL:
-					condition_met = (dist <= target_distance + STOP_OFFSET);
-					break;
-				case DistanceComparison::GREATER_THAN:
-					condition_met = (dist > target_distance - STOP_OFFSET);
-					break;
-				case DistanceComparison::GREATER_EQUAL:
-					condition_met = (dist >= target_distance - STOP_OFFSET);
-					break;
+			switch (comparison)
+			{
+			case DistanceComparison::LESS_THAN:
+				condition_met = (dist < target_distance + STOP_OFFSET);
+				break;
+			case DistanceComparison::LESS_EQUAL:
+				condition_met = (dist <= target_distance + STOP_OFFSET);
+				break;
+			case DistanceComparison::GREATER_THAN:
+				condition_met = (dist > target_distance - STOP_OFFSET);
+				break;
+			case DistanceComparison::GREATER_EQUAL:
+				condition_met = (dist >= target_distance - STOP_OFFSET);
+				break;
 			}
 
-			if (condition_met) {
+			if (condition_met)
+			{
 				left_motor_group.move(0);
 				right_motor_group.move(0);
 				pros::delay(80);
@@ -186,7 +204,8 @@ namespace AutonUtils {
 			float error = std::abs(dist - target_distance);
 			int speed = maxSpeed;
 
-			if (error < DECEL_BUFFER) {
+			if (error < DECEL_BUFFER)
+			{
 				float ratio = error / DECEL_BUFFER;
 				speed = minSpeed + (int)((maxSpeed - minSpeed) * ratio);
 			}
@@ -207,20 +226,25 @@ namespace AutonUtils {
 	/* ================= WALL HELPERS ================= */
 
 	inline bool driveUntilFrontWall(float target_distance,
-	                                bool forwards = true,
-	                                int maxSpeed = 60,
-	                                int minSpeed = 30,
-	                                int timeout_ms = 1500) {
+									bool forwards = true,
+									int maxSpeed = 60,
+									int minSpeed = 30,
+									int timeout_ms = 1500)
+	{
 
-		pros::Distance* sensor = nullptr;
+		pros::Distance *sensor = nullptr;
 
-		if (front_right_distance_sensor.get() > 0) {
+		if (front_right_distance_sensor.get() > 0)
+		{
 			sensor = &front_right_distance_sensor;
-		} else if (front_left_distance_sensor.get() > 0) {
+		}
+		else if (front_left_distance_sensor.get() > 0)
+		{
 			sensor = &front_left_distance_sensor;
 		}
 
-		if (!sensor) return false;
+		if (!sensor)
+			return false;
 
 		return driveUntilDistanceSensor(
 			*sensor,
@@ -229,17 +253,18 @@ namespace AutonUtils {
 			forwards,
 			maxSpeed,
 			minSpeed,
-			timeout_ms
-		);
+			timeout_ms);
 	}
 
 	inline bool driveUntilLeftWall(float target_distance,
-	                               bool forwards = true,
-	                               int maxSpeed = 60,
-	                               int minSpeed = 30,
-	                               int timeout_ms = 1500) {
+								   bool forwards = true,
+								   int maxSpeed = 60,
+								   int minSpeed = 30,
+								   int timeout_ms = 1500)
+	{
 
-		if (left_distance_sensor.get() <= 0) return false;
+		if (left_distance_sensor.get() <= 0)
+			return false;
 
 		return driveUntilDistanceSensor(
 			left_distance_sensor,
@@ -248,8 +273,7 @@ namespace AutonUtils {
 			forwards,
 			maxSpeed,
 			minSpeed,
-			timeout_ms
-		);
+			timeout_ms);
 	}
 
 }
