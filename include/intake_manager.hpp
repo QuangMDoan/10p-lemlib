@@ -13,7 +13,7 @@ enum class IntakeState
 	SCORE_MID_SKILLS,
 	SCORE_LOW_SKILLS,
 	UNJAM,
-	SCORE_MID_FAST
+	SCORE_MID_FAST,
 };
 
 class IntakeManager
